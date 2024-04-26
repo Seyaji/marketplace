@@ -1,0 +1,95 @@
+/* --- MAIN --- */
+.menu_bar {
+  width: 100vw;
+  height: auto;
+}
+
+/* --- SEARCH --- */
+.search {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.name_div {
+  display: flex;
+  align-items: center;
+}
+
+.search_bar {
+  max-width: 800px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.search_box {
+  height: 40px;
+  width: 600px;
+  border: 1px solid white;
+  margin: 20px;
+}
+
+.search_button {
+  width: 100px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid white;
+  margin: 20px;
+}
+
+/* --- TOP ROW --- */
+.top_bar {
+  width: 100%;
+  display: flex;
+}
+
+.top_bar ul {
+  padding: 5px;
+  display: flex;
+  width: 100%;
+  list-style: none;
+  flex-direction: row;
+  border-bottom: solid 1px gray;
+}
+
+.top_bar ul li {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  cursor: pointer;
+  color: grey;
+}
+
+.top_bar ul li:hover {
+  color: white;
+}
+
+/* --- BOTTOM BAR --- */
+.bottom_bar {
+  width: 100%;
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+}
+
+.bottom_bar ul {
+  padding: 5px;
+  display: flex;
+  width: 100%;
+  list-style: none;
+  flex-direction: row;
+}
+
+.bottom_bar ul li {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  cursor: pointer;
+  color: grey;
+}
+
+.bottom_bar ul li:hover {
+  color: white;
+}
