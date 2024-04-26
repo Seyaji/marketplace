@@ -6,7 +6,7 @@ const cardData = {
   date: "12/12/12",
   author: "Author",
   description: "this is a description",
-  url: "/"
+  url: "/next.svg"
 }
 
 const testArray = [cardData, cardData, cardData, cardData, cardData, cardData, cardData, cardData, cardData]

@@ -3,15 +3,22 @@
   height: 310px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 1rem;
+  justify-content: flex-start;
+  padding: 10px;
   margin: 1rem;
   cursor: pointer;
-  border-radius: 15px;
+  border-radius: 5px;
 }
 
 .card:hover {
   background-color: rgba(190, 187, 232, 0.162);
+}
+
+.card_image {
+  border-radius: 5px;
+  width: 180px;
+  height: 180px;
+  border: 1px solid white;
 }
 
 .card_header {

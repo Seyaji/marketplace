@@ -12,19 +12,20 @@ export interface CardProps {
 export function Card({ name, url, date, author, description }: CardProps) {
   return (
     <div className={styles.card}>
+      <div className={styles.card_image}>
+        <Image
+          src={url}
+          alt=""
+          width={160}
+          height={160}
+        />
+      </div>
+
       <div className={styles.card_header}>
         <h5>{name}</h5>
         <h5>{date}</h5>
       </div>
 
-      <br />
-
-      <Image
-        src={url}
-        alt=""
-        width={168}
-        height={168}
-      />
 
       <br />
 
