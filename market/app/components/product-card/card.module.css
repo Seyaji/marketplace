@@ -1,0 +1,23 @@
+.card {
+  width: 200px;
+  height: 310px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem;
+  margin: 1rem;
+  cursor: pointer;
+  border-radius: 15px;
+}
+
+.card:hover {
+  background-color: rgba(190, 187, 232, 0.162);
+}
+
+.card_header {
+  width: 100%;
+}
+
+.card_base {
+  width: 100%;
+}

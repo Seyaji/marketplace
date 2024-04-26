@@ -1,0 +1,15 @@
+.market {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.market_grid {
+  display: flex;
+  max-width: 1100px;
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}

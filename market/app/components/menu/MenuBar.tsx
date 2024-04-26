@@ -5,7 +5,7 @@ function SearchBar() {
     <div className={styles.search}>
 
       <div className={styles.name_div}>
-        <h3>MARKET</h3>
+        <h3><a href="/">MARKET</a></h3>
       </div>
 
       <div className={styles.search_bar}>
@@ -37,9 +37,9 @@ function BottomBar() {
   return (
     <div className={styles.bottom_bar}>
       <ul>
-        <li>Bottom</li>
-        <li>Row</li>
-        <li>Categories</li>
+        <li><a href='/market'>Bottom</a></li>
+        <li><a href='/market'>Row</a></li>
+        <li><a href='/market'>Categories</a></li>
       </ul>
     </div>
   )
