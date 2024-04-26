@@ -46,15 +46,15 @@
 .top_bar {
   width: 100%;
   display: flex;
+  border-bottom: solid 1px gray;
+  justify-content: space-between;
 }
 
 .top_bar ul {
   padding: 5px;
   display: flex;
-  width: 100%;
   list-style: none;
   flex-direction: row;
-  border-bottom: solid 1px gray;
 }
 
 .top_bar ul li {

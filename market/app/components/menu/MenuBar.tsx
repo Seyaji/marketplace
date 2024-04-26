@@ -25,9 +25,13 @@ function TopBar() {
   return (
     <div className={styles.top_bar}>
       <ul>
-        <li>Top</li>
-        <li>Row</li>
-        <li>Things</li>
+        <li><a href="/">My Contracts</a></li>
+        <li><a href="/new-listing">List Contract</a></li>
+        <li>Help</li>
+      </ul>
+
+      <ul>
+        <li>Connect Wallet</li>
       </ul>
     </div>
   )
