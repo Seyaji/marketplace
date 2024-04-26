@@ -49,11 +49,7 @@ export function MenuBar() {
   return (
     <div className={styles.menu_bar}>
       <TopBar />
-
-      <div className={styles.search}>
-        <SearchBar />
-      </div>
-
+      <SearchBar />
       <BottomBar />
     </div>
   )
