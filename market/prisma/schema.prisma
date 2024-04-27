@@ -19,3 +19,11 @@ model Contract {
   image     String
   createdAt DateTime @default(now())
 }
+
+model Listing {
+  id      Int    @id @default(autoincrement())
+  name    String
+  address String
+  author  String
+  image   String
+}
