@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.13.0",
+    "alchemy-sdk": "^3.2.1",
     "next": "14.2.3",
     "prisma": "^5.13.0",
     "react": "^18",
