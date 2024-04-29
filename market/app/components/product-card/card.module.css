@@ -1,6 +1,6 @@
 .card {
   width: 200px;
-  height: 310px;
+  height: 250px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -8,6 +8,26 @@
   margin: 1rem;
   cursor: pointer;
   border-radius: 5px;
+  background-color: #171921;
+  border-radius: 5px;
+  border: 1px solid #2b2b2b;
+}
+
+.card h5 {
+  color: aliceblue;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  padding-left: 0.25rem;
+  font-weight: 400;
+}
+
+.underline {
+  width: 100%;
+  border-bottom: 1px solid #2b2b2b;
+}
+
+.card p {
+  color: aliceblue;
 }
 
 .card:hover {
@@ -18,10 +38,11 @@
   border-radius: 5px;
   width: 180px;
   height: 180px;
-  border: 1px solid white;
+  border: 1px solid #2b2b2b;
 }
 
 .card_header {
+  margin-top: 0.25rem;
   width: 100%;
 }
 
