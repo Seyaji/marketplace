@@ -12,10 +12,6 @@ interface Listing {
   image: string;
 }
 
-interface MarketGridProps {
-  listings: Listing[];
-}
-
 
 async function getListings() {
   const response = await fetch("/api/get-listings");

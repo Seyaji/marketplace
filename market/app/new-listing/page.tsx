@@ -30,7 +30,6 @@ async function createListing(data: FormData) {
 
 async function validateData(data: FormData): Promise<boolean> {
   const address = await alchemy.core.getBalance(data.address)
-  console.log(address)
   return !!address && !Object.values(data).map(entry => !!entry).includes(false)
 }
 
@@ -52,7 +51,6 @@ function ContractForm() {
 
         if (valid) {
           await createListing(formData)
-          console.log(formData)
 
           setFormData({
             name: '',
@@ -62,8 +60,6 @@ function ContractForm() {
           });
 
           setSuccess(true)
-
-          console.log(formData)
         }
       })
       .catch(error => console.error(error))
