@@ -1,3 +1,8 @@
+'use client'
+
+import { Fragment } from 'react';
+import { IWeb3Context, useWeb3Context } from '../wallet-connect/web3Context'
+import Web3ContextProvider from "../wallet-connect/web3Context";
 import styles from './menuBar.module.css'
 
 function SearchBar() {
@@ -21,7 +26,38 @@ function SearchBar() {
   )
 }
 
+function shortAddress(address: string) {
+  return "0x..." + address.slice(address.length - 6, address.length)
+}
+
 function TopBar() {
+  const {
+    connectWallet,
+    disconnect,
+    state: { isAuthenticated, address, network, provider },
+  } = useWeb3Context() as IWeb3Context;
+
+  function connectWalletButton() {
+    if (isAuthenticated) {
+      connectWallet()
+
+      return (
+        <ul>
+          <li>{shortAddress(address ?? "")}</li>
+          <li>Network: {network?.name}</li>
+          <button className={styles.connection} onClick={disconnect}>Disconnect</button>
+        </ul>
+      )
+    }
+
+    return (
+      <ul>
+        <button className={styles.connection} onClick={connectWallet}>Connect</button>
+      </ul>
+    )
+  }
+
+
   return (
     <div className={styles.top_bar}>
       <ul>
@@ -30,9 +66,9 @@ function TopBar() {
         <li>Help</li>
       </ul>
 
-      <ul>
-        <li>Connect Wallet</li>
-      </ul>
+      {
+        connectWalletButton()
+      }
     </div>
   )
 }
@@ -52,9 +88,11 @@ function BottomBar() {
 export function MenuBar() {
   return (
     <div className={styles.menu_bar}>
-      <TopBar />
-      <SearchBar />
-      <BottomBar />
+      <Web3ContextProvider>
+        <TopBar />
+        <SearchBar />
+        <BottomBar />
+      </Web3ContextProvider>
     </div>
   )
 }
