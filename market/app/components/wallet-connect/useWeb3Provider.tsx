@@ -1,5 +1,6 @@
 import { BrowserProvider, ethers, JsonRpcSigner } from "ethers";
 import { useCallback, useEffect, useState } from "react";
+import { userFunction } from "../../../lib/users/userFunction";
 
 declare global {
   interface Window {
@@ -56,6 +57,8 @@ const useWeb3Provider = () => {
           provider,
           isAuthenticated: true,
         });
+
+        await userFunction(accounts[0])
 
         localStorage.setItem("isAuthenticated", "true");
       }
