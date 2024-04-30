@@ -48,6 +48,7 @@
   display: flex;
   border-bottom: solid 1px gray;
   justify-content: space-between;
+  padding-right: 1rem;
 }
 
 .top_bar ul {
@@ -55,6 +56,22 @@
   display: flex;
   list-style: none;
   flex-direction: row;
+}
+
+.top_bar ul h4 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.top_bar ul button {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  width: 100px;
+  height: 20px;
+  cursor: pointer;
+  border: 1px solid white;
+  background-color: black;
+  border-radius: 3px;
 }
 
 .top_bar ul li {
