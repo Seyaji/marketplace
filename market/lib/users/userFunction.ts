@@ -1,11 +1,12 @@
 export async function getUser(address: string) {
-  return await fetch("/api/get-user?address=" + address);
+  return await fetch("/api/get-user?address=" + address.toLowerCase());
 }
 
 export async function createUser(address: string) {
+  const addr = address.toLowerCase();
   const newUserData = {
-    name: address,
-    address,
+    name: addr,
+    address: addr,
     image: "/",
   };
 

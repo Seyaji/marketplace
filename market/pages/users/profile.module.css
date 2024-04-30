@@ -1,0 +1,21 @@
+.profile {
+  width: 100%;
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile_content {
+  width: 700px;
+}
+
+.user_entry {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.user_entry_tag {
+  width: 200px;
+}
