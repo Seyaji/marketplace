@@ -41,7 +41,7 @@ function TopBar() {
 
       return (
         <ul>
-          <li><a href={"/users/" + address?.toLowerCase()}>{shortAddress(address ?? "")}</a></li>
+          <li><a href={"/user/" + address?.toLowerCase()}>{shortAddress(address ?? "")}</a></li>
           <li>Network: {network?.name}</li>
           <button className={styles.connection} onClick={disconnect}>Disconnect</button>
         </ul>
@@ -75,9 +75,10 @@ function BottomBar() {
   return (
     <div className={styles.bottom_bar}>
       <ul>
-        <li><a href='/market'>Bottom</a></li>
-        <li><a href='/market'>Row</a></li>
-        <li><a href='/market'>Categories</a></li>
+        <li><a href='/market'>All Contracts</a></li>
+      </ul>
+      <ul>
+        <li><a href='/users'>User Directory</a></li>
       </ul>
     </div>
   )

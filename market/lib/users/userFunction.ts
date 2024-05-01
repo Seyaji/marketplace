@@ -1,3 +1,15 @@
+export interface Profile {
+  id: number;
+  name: string;
+  address: string;
+  image: string;
+  createdAt: Date;
+}
+
+export async function getAllUsers() {
+  return await fetch("/api/get-users");
+}
+
 export async function getUser(address: string) {
   return await fetch("/api/get-user?address=" + address.toLowerCase());
 }
