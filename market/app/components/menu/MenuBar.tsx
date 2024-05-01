@@ -59,7 +59,7 @@ function TopBar() {
   return (
     <div className={styles.top_bar}>
       <ul>
-        <li><a href="/">My Contracts</a></li>
+        <li><a href="/my-contracts">My Contracts</a></li>
         <li><a href="/new-listing">List Contract</a></li>
         <li><a href="/deploy-contract">Deploy Contract</a></li>
         <li>Help</li>
