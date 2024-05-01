@@ -28,7 +28,6 @@ export default function Users({ children }: Props) {
 
         if (res.ok) {
           setUsers(await res.json())
-          console.log(users)
         }
       }
       catch (error) {

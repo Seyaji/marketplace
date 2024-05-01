@@ -63,9 +63,6 @@ const contracts: ContractCollection = {
 function ContractForm({ name, fields }: ContractFormProps) {
   const [formData, setFormData] = useState<FieldData>({});
 
-  console.log(fields)
-  console.log(Object.entries(fields))
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
@@ -104,7 +101,6 @@ function DropDown({ setState }: DropDownProps) {
   function handleClick(e: React.MouseEvent) {
     const contract = e.currentTarget.getAttribute('value')
     if (contract) {
-      console.log(contract)
       setState(contract)
     }
   }
