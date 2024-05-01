@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Card } from "../components/product-card/Card";
 import styles from "./market.module.css"
 
-interface Listing {
+export interface Listing {
   id: string;
   name: string;
   address: string;
