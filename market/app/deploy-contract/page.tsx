@@ -3,6 +3,8 @@
 import React, { useState } from 'react'
 import styles from "./deploy-contract.module.css"
 import formStyles from "../components/css/form.module.css"
+import { ABIEntry, ContractABI, FunctionType } from '../../contracts/contract-types'
+import { token } from '../../contracts/contractAbiFiles'
 
 
 interface DropDownProps {
@@ -11,7 +13,6 @@ interface DropDownProps {
 
 interface ContractFields {
   name: string;
-  fields: { [key: string]: string };
 }
 
 interface FieldData {
@@ -22,46 +23,48 @@ interface ContractCollection {
   [key: string]: ContractFields
 }
 
-interface ContractFormProps extends ContractFields { }
+interface ContractFormProps extends ABIEntry {
+  contractName: string
+}
 
-
-// To be replaced by with API call to SQL backend
-const contracts: ContractCollection = {
-  "Guess Average": {
-    name: "Guess Average",
-    fields: {
-      "Price": 'string',
-      "Number Of Shares": 'number',
-      'Timer': 'number'
-    }
-  },
-  "Contract A": {
-    name: "Contract A",
-    fields: {
-      'Number of voters': 'number',
-      'Signup cost': 'string',
-      'Timer': 'number'
-    }
-  },
-  "Contract B": {
-    name: "Contract B",
-    fields: {
-      "Price": 'string',
-      "Number Of Shares": 'number'
-    }
-  },
-  "Contract C": {
-    name: "Contract C",
-    fields: {
-      "Price": 'string',
-      "Number Of Shares": 'number'
-    }
+function constructorFields(abi: ContractABI) {
+  const abiArray = abi.abi
+  if (abiArray) {
+    return abiArray.filter(entry => entry.type === FunctionType.Constructor)[0]
   }
+  return []
 }
 
 
-function ContractForm({ name, fields }: ContractFormProps) {
+interface ContractData {
+  [key: string]: ABIEntry | never[]
+}
+const contracts: ContractData = {
+  "Token": constructorFields(token),
+  "Loan": constructorFields(token),
+  "NFT": constructorFields(token),
+  "Game": constructorFields(token),
+}
+
+
+async function deployContract(body: ContractFields) {
+  return await fetch("/api/deploy-contract", {
+    method: 'POST',
+    headers: {
+      "content-type": "application/json"
+    },
+    body: JSON.stringify(body)
+  })
+}
+
+
+function ContractForm({ contractName, inputs }: ContractFormProps) {
   const [formData, setFormData] = useState<FieldData>({});
+  console.log(contractName, inputs)
+  const handleSubmit = async (event: SubmitEvent) => {
+    event.preventDefault
+    await deployContract(formData)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -85,10 +88,10 @@ function ContractForm({ name, fields }: ContractFormProps) {
   }
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <h3>{name}</h3>
       {
-        Object.entries(fields).map(([key, value], index) => formField(key, value, index))
+        (inputs ?? []).map(({ name, type }, index) => formField(name, type, index))
       }
       <button className={formStyles.form_button} type="submit">DEPLOY</button>
     </form>
@@ -96,6 +99,7 @@ function ContractForm({ name, fields }: ContractFormProps) {
 }
 
 function DropDown({ setState }: DropDownProps) {
+  const [selected, setSelected] = useState<string>("")
   const contractTypes = Object.keys(contracts)
 
   function handleClick(e: React.MouseEvent) {
@@ -108,7 +112,9 @@ function DropDown({ setState }: DropDownProps) {
   return (
     <div className={styles.dropdown_box}>
       <ul>
-        <li>- pick contract -</li>
+        {
+          selected ? selected : <li>- pick contract -</li>
+        }
         {
           contractTypes.map((name, index) => <li key={name + index} onClick={handleClick} value={name}>{name}</li>)
         }
@@ -128,7 +134,7 @@ export default function DeployContract() {
           <DropDown setState={setState} />
         </div>
         {
-          state && <ContractForm {...contracts[state]} />
+          state && <ContractForm {...contracts[state]} contractName={state} />
         }
       </div>
     </div>
