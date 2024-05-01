@@ -88,6 +88,8 @@
 /* --- BOTTOM BAR --- */
 .bottom_bar {
   width: 100%;
+  display: flex;
+  justify-content: space-between;
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
 }
@@ -95,7 +97,6 @@
 .bottom_bar ul {
   padding: 5px;
   display: flex;
-  width: 100%;
   list-style: none;
   flex-direction: row;
 }

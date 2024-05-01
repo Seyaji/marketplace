@@ -1,0 +1,20 @@
+.users {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user_list_item {
+  width: 800px;
+  height: auto;
+  margin: 1rem;
+  padding: 1rem;
+  border: 1px solid grey;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.user_list_item:hover {
+  box-shadow: 5px rgb(177, 177, 177);
+}

@@ -2,17 +2,10 @@
 
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { getUser } from '../../lib/users/userFunction';
+import { getUser, Profile } from '../../lib/users/userFunction';
 import styles from './profile.module.css'
 import Layout from '../layout'
 
-interface Profile {
-  id: number;
-  name: string;
-  address: string;
-  image: string;
-  createdAt: Date;
-}
 
 export default function UserProfilePage() {
   const router = useRouter();
@@ -26,10 +19,8 @@ export default function UserProfilePage() {
 
         if (res.ok) {
           const data = await res.json();
-          console.log(data)
           setUserData(data);
         } else {
-          console.log(res)
           console.error('Failed to fetch user data:', res.statusText);
         }
 
@@ -39,7 +30,6 @@ export default function UserProfilePage() {
     };
 
     if (username) {
-      console.log(username)
       fetchUserData();
     }
   }, [username]);
