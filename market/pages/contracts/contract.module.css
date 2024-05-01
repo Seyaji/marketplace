@@ -1,0 +1,13 @@
+.contract_box {
+  width: 800px;
+}
+
+.details_header {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.contract_label {
+  width: 200px;
+}

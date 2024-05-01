@@ -7,6 +7,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const { name, address, author, image } = req.body;
       await prisma.listing.create({
         data: {
+          // placeholder until upload custom abi completed
+          abi: "test",
           name,
           address,
           author,
