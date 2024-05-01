@@ -46,6 +46,12 @@
   width: 100%;
 }
 
+.card_header h5 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .card_base {
   width: 100%;
 }
