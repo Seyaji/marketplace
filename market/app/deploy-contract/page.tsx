@@ -9,18 +9,11 @@ import { token } from '../../contracts/contractAbiFiles'
 
 interface DropDownProps {
   setState: React.Dispatch<React.SetStateAction<string | undefined>>
-}
-
-interface ContractFields {
-  name: string;
+  state: string
 }
 
 interface FieldData {
   [key: string]: string;
-}
-
-interface ContractCollection {
-  [key: string]: ContractFields
 }
 
 interface ContractFormProps extends ABIEntry {
@@ -40,14 +33,14 @@ interface ContractData {
   [key: string]: ABIEntry | never[]
 }
 const contracts: ContractData = {
-  "Token": constructorFields(token),
+  "ERC20Token": constructorFields(token),
   "Loan": constructorFields(token),
   "NFT": constructorFields(token),
   "Game": constructorFields(token),
 }
 
 
-async function deployContract(body: ContractFields) {
+async function deployContract(body: FieldData) {
   return await fetch("/api/deploy-contract", {
     method: 'POST',
     headers: {
@@ -60,9 +53,14 @@ async function deployContract(body: ContractFields) {
 
 function ContractForm({ contractName, inputs }: ContractFormProps) {
   const [formData, setFormData] = useState<FieldData>({});
-  console.log(contractName, inputs)
+
+
+  if (Object.values(formData).length <= 0) {
+    setFormData(inputs?.reduce((acc, curr) => ({ ...acc, [curr.name]: "" }), {}) || {})
+  }
+
   const handleSubmit = async (event: SubmitEvent) => {
-    event.preventDefault
+    event.preventDefault()
     await deployContract(formData)
   }
 
@@ -89,7 +87,7 @@ function ContractForm({ contractName, inputs }: ContractFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>{name}</h3>
+      <h3>{contractName}</h3>
       {
         (inputs ?? []).map(({ name, type }, index) => formField(name, type, index))
       }
@@ -98,8 +96,7 @@ function ContractForm({ contractName, inputs }: ContractFormProps) {
   );
 }
 
-function DropDown({ setState }: DropDownProps) {
-  const [selected, setSelected] = useState<string>("")
+function DropDown({ setState, state }: DropDownProps) {
   const contractTypes = Object.keys(contracts)
 
   function handleClick(e: React.MouseEvent) {
@@ -113,7 +110,7 @@ function DropDown({ setState }: DropDownProps) {
     <div className={styles.dropdown_box}>
       <ul>
         {
-          selected ? selected : <li>- pick contract -</li>
+          state ? <li>{state}</li> : <li>- pick contract -</li>
         }
         {
           contractTypes.map((name, index) => <li key={name + index} onClick={handleClick} value={name}>{name}</li>)
@@ -131,7 +128,7 @@ export default function DeployContract() {
       <div className={styles.deploy_contract}>
         <div className={styles.dropdown_header}>
           <h4>Choose contract to deploy: </h4>
-          <DropDown setState={setState} />
+          <DropDown setState={setState} state={state || ""} />
         </div>
         {
           state && <ContractForm {...contracts[state]} contractName={state} />

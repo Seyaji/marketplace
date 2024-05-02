@@ -30,7 +30,7 @@ export interface ABIEntry {
   inputs?: ABIParameter[];
   outputs?: ABIParameter[];
   stateMutability?: string;
-  type: FunctionType;
+  type?: FunctionType;
   name?: string;
   anonymous?: boolean;
   indexed?: boolean;
