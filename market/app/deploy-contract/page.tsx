@@ -1,10 +1,11 @@
 'use client'
 
 import React, { useState } from 'react'
+import { ethers } from 'ethers'
 import styles from "./deploy-contract.module.css"
 import formStyles from "../components/css/form.module.css"
-import { ABIEntry, ContractABI, FunctionType } from '../../contracts/contract-types'
-import { token } from '../../contracts/contractAbiFiles'
+import { ABIEntry, ContractABI, FunctionType, InternalType } from '../../contracts/contract-types'
+import { ERC20Token } from '../../contracts/contractAbiFiles'
 
 
 interface DropDownProps {
@@ -12,8 +13,11 @@ interface DropDownProps {
   state: string
 }
 
-interface FieldData {
-  [key: string]: string;
+export interface FormData {
+  name: string;
+  constructorArgs: {
+    [key: string]: string;
+  }
 }
 
 interface ContractFormProps extends ABIEntry {
@@ -33,14 +37,13 @@ interface ContractData {
   [key: string]: ABIEntry | never[]
 }
 const contracts: ContractData = {
-  "ERC20Token": constructorFields(token),
-  "Loan": constructorFields(token),
-  "NFT": constructorFields(token),
-  "Game": constructorFields(token),
+  "ERC20Token": constructorFields(ERC20Token),
+  "Loan": constructorFields(ERC20Token),
+  "NFT": constructorFields(ERC20Token),
+  "Game": constructorFields(ERC20Token),
 }
 
-
-async function deployContract(body: FieldData) {
+async function deployContract(body: any) {
   return await fetch("/api/deploy-contract", {
     method: 'POST',
     headers: {
@@ -50,50 +53,93 @@ async function deployContract(body: FieldData) {
   })
 }
 
-
 function ContractForm({ contractName, inputs }: ContractFormProps) {
-  const [formData, setFormData] = useState<FieldData>({});
 
+  async function deploy(formData: FormData) {
+    const ethereum = window.ethereum
+    if (ethereum) {
+      try {
+        const provider = new ethers.BrowserProvider(ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = await provider.getSigner();
 
-  if (Object.values(formData).length <= 0) {
-    setFormData(inputs?.reduce((acc, curr) => ({ ...acc, [curr.name]: "" }), {}) || {})
-  }
+        const { constructorArgs } = formData;
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    await deployContract(formData)
-  }
+        const sorted = inputs?.map(({ name }) => constructorArgs?.[name])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setFormData({ ...formData, [id]: value });
-  };
+        console.log(provider, signer, constructorArgs, sorted)
 
-  function formField(key: string, type: string, index: number) {
-    return (
-      <div className={formStyles.form_group} key={key + index}>
-        <label>{key}: </label>
-        <input
-          type={type}
-          id={key}
-          placeholder={key}
-          required
-          onChange={handleChange}
-          value={formData[key]}
-        />
-      </div>
-    )
-  }
+        if (provider && sorted) {
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <h3>{contractName}</h3>
-      {
-        (inputs ?? []).map(({ name, type }, index) => formField(name, type, index))
+          const factory = new ethers.ContractFactory(ERC20Token.abi, ERC20Token.bytecode, signer);
+          const contract = await factory.deploy(...sorted);
+          await contract.waitForDeployment();
+
+          console.log(contract)
+          await deployContract(contract)
+
+          return contract;
+        }
+      } catch (error) {
+        console.error("Error deploying contract:", error);
+        throw error;
       }
-      <button className={formStyles.form_button} type="submit">DEPLOY</button>
-    </form>
-  );
+    }
+  }
+
+  if (inputs) {
+
+    const [formData, setFormData] = useState<FormData>(
+      [...inputs, { name: contractName }]
+        ?.reduce((acc, curr, index) => (
+          //@ts-ignore lame........ :(
+          { ...acc, constructorArgs: { ...acc?.constructorArgs, [curr.name]: "" } }
+        ), {}) as FormData
+    );
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault()
+      if ('constructorArgs' in formData) {
+        await deploy(formData)
+      }
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { id, value } = e.target;
+      setFormData({ ...formData, constructorArgs: { ...formData.constructorArgs, [id]: value } });
+    };
+
+    const formField = (name: string, type: string, index: number) => {
+      const address = type === InternalType.Address && { "minLength": 42, "maxLength": 42 }
+
+      if (formData && 'constructorArgs' in formData) {
+        return (
+          <div className={formStyles.form_group} key={name + index}>
+            <label>{name}: </label>
+            <input
+              type={type}
+              id={name}
+              placeholder={name}
+              required
+              {...address}
+              onChange={(e) => handleChange(e)}
+              value={formData.constructorArgs[name]}
+            />
+          </div>
+        )
+      }
+    }
+
+    return (
+      <form onSubmit={handleSubmit}>
+        <h3>{contractName}</h3>
+        {
+          (inputs ?? []).map(({ name, type }, index) => formField(name, type, index))
+        }
+        <button className={formStyles.form_button} type="submit">DEPLOY</button>
+      </form>
+    );
+  }
 }
 
 function DropDown({ setState, state }: DropDownProps) {

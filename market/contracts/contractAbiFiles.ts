@@ -1,6 +1,6 @@
 import * as Token from "./Token.json";
 import { ContractABI } from "./contract-types";
 
-const token = Token as ContractABI;
+const ERC20Token = Token as ContractABI;
 
-export { token };
+export { ERC20Token };

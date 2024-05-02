@@ -38,4 +38,5 @@ export interface ABIEntry {
 
 export interface ContractABI {
   abi: ABIEntry[];
+  bytecode: string;
 }
