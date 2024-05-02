@@ -25,7 +25,10 @@ export default function Contract() {
       }
     }
 
-    getContract()
+    if (contract) {
+      getContract()
+    }
+
   }, [contract])
 
   function ContractBox(details: Listing) {
@@ -35,10 +38,14 @@ export default function Contract() {
     function Heading({ header }: { header: [string, string] }) {
       const [key, value] = header
 
+      if (key === 'abi') {
+        return;
+      }
+
       return (
         <div className={styles.details_header}>
-          <h1 className={styles.contract_label}>{key[0].toUpperCase() + key.slice(1, key.length)}: </h1>
-          <h1>{value}</h1>
+          <h3 className={styles.contract_label}>{key[0].toUpperCase() + key.slice(1, key.length)}: </h3>
+          <h3>{value}</h3>
         </div>
       )
     }
@@ -46,7 +53,7 @@ export default function Contract() {
     return (
       <div className={styles.contract_box}>
         {
-          entries.map((entry, index) => <Heading header={entry} />)
+          entries.map((entry, index) => <Heading key={index} header={entry} />)
         }
 
         <div className={styles.contract_functions}>
@@ -59,9 +66,11 @@ export default function Contract() {
 
   return (
     <Layout>
-      {
-        details ? <ContractBox {...details} /> : <h1>Loading...</h1>
-      }
+      <div className={styles.page_layout}>
+        {
+          details ? <ContractBox {...details} /> : <h1>Loading...</h1>
+        }
+      </div>
     </Layout>
   )
 

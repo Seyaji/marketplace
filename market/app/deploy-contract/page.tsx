@@ -22,6 +22,7 @@ export interface FormData {
 
 interface ContractFormProps extends ABIEntry {
   contractName: string
+  setStatus: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 function constructorFields(abi: ContractABI) {
@@ -44,7 +45,7 @@ const contracts: ContractData = {
 }
 
 async function deployContract(body: any) {
-  return await fetch("/api/deploy-contract", {
+  return await fetch("/api/create-listing", {
     method: 'POST',
     headers: {
       "content-type": "application/json"
@@ -53,31 +54,49 @@ async function deployContract(body: any) {
   })
 }
 
-function ContractForm({ contractName, inputs }: ContractFormProps) {
+function ContractForm({ contractName, inputs, setStatus }: ContractFormProps) {
 
   async function deploy(formData: FormData) {
     const ethereum = window.ethereum
     if (ethereum) {
       try {
         const provider = new ethers.BrowserProvider(ethereum);
+
+        setStatus((prevState) => ["connected", ...prevState,])
+
         await provider.send("eth_requestAccounts", []);
         const signer = await provider.getSigner();
+        setStatus((prevState) => ["Account retrieved", ...prevState,])
+
+
 
         const { constructorArgs } = formData;
 
         const sorted = inputs?.map(({ name }) => constructorArgs?.[name])
+
+        setStatus((prevState) => ["Validading data...", ...prevState,])
 
         console.log(provider, signer, constructorArgs, sorted)
 
         if (provider && sorted) {
 
           const factory = new ethers.ContractFactory(ERC20Token.abi, ERC20Token.bytecode, signer);
+          setStatus((prevState) => ["Constructing contract", ...prevState,])
           const contract = await factory.deploy(...sorted);
+          setStatus((prevState) => ["Deploying...", ...prevState,])
+
           await contract.waitForDeployment();
+          setStatus((prevState) => ["Deployed", ...prevState,])
+
+          const contractAddress = (await contract.getAddress()).toLowerCase()
 
           console.log(contract)
-          await deployContract(contract)
+          const res = await deployContract({ author: signer.address, address: contractAddress, name: "ERC20 " + contractName, image: "/", abi: JSON.stringify(ERC20Token.abi) })
+          setStatus((prevState) => ["Deployment Complete", ...prevState,])
 
+          if (res.ok) {
+            window.location.href = "/contracts/" + contractAddress
+          }
           return contract;
         }
       } catch (error) {
@@ -168,6 +187,7 @@ function DropDown({ setState, state }: DropDownProps) {
 
 export default function DeployContract() {
   const [state, setState] = useState<string | undefined>()
+  const [status, setStatus] = useState<string[]>([])
 
   return (
     <div className={styles.page}>
@@ -177,9 +197,14 @@ export default function DeployContract() {
           <DropDown setState={setState} state={state || ""} />
         </div>
         {
-          state && <ContractForm {...contracts[state]} contractName={state} />
+          state && <ContractForm {...contracts[state]} contractName={state} setStatus={setStatus} />
         }
       </div>
-    </div>
+      <div className={styles.status_box}>
+        {
+          status && status?.map((log, index) => <p key={index} > {log}</p>)
+        }
+      </div>
+    </div >
   )
 }

@@ -4,11 +4,11 @@ import prisma from "../../lib/prisma";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.body) {
-      const { name, address, author, image } = req.body;
+      const { name, address, author, image, abi } = req.body;
       await prisma.listing.create({
         data: {
           // placeholder until upload custom abi completed
-          abi: "test",
+          abi: abi || "test",
           name,
           address,
           author,
