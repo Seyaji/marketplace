@@ -91,7 +91,7 @@ function ContractForm({ contractName, inputs, setStatus }: ContractFormProps) {
           const contractAddress = (await contract.getAddress()).toLowerCase()
 
           console.log(contract)
-          const res = await deployContract({ author: signer.address, address: contractAddress, name: "ERC20 " + contractName, image: "/", abi: JSON.stringify(ERC20Token.abi) })
+          const res = await deployContract({ author: signer.address.toLowerCase(), address: contractAddress.toLowerCase(), name: "ERC20 " + contractName, image: "/", abi: JSON.stringify(ERC20Token.abi) })
           setStatus((prevState) => ["Deployment Complete", ...prevState,])
 
           if (res.ok) {
