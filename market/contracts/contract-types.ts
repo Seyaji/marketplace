@@ -39,5 +39,5 @@ export interface ABIEntry {
 export interface ContractABI {
   abi: ABIEntry[];
   bytecode: string;
-  contractname: string;
+  contractName: string;
 }
