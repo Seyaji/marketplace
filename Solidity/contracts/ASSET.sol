@@ -8,11 +8,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Votes.sol";
 
-contract ASSET is ERC721, ERC721Burnable, Ownable, EIP712, ERC721Votes {
-    constructor(address initialOwner)
-        ERC721("ASSET", "ASS")
+contract Nft is ERC721, ERC721Burnable, Ownable, EIP712, ERC721Votes {
+    constructor(address initialOwner, string memory name, string memory symbol, string memory identifier)
+        ERC721(name, symbol)
         Ownable(initialOwner)
-        EIP712("ASSET", "1")
+        EIP712(name, identifier)
     {}
 
     function safeMint(address to, uint256 tokenId) public onlyOwner {
