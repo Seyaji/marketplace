@@ -59,7 +59,7 @@ function ContractForm({ contractName, inputs }: ContractFormProps) {
     setFormData(inputs?.reduce((acc, curr) => ({ ...acc, [curr.name]: "" }), {}) || {})
   }
 
-  const handleSubmit = async (event: SubmitEvent) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     await deployContract(formData)
   }
