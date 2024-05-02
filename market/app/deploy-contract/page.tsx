@@ -5,7 +5,7 @@ import { ethers } from 'ethers'
 import styles from "./deploy-contract.module.css"
 import formStyles from "../components/css/form.module.css"
 import { ABIEntry, ContractABI, FunctionType, InternalType } from '../../contracts/contract-types'
-import { ERC20Token } from '../../contracts/contractAbiFiles'
+import { ERC20Token, ERC721Nft } from '../../contracts/contractAbiFiles'
 
 
 interface DropDownProps {
@@ -30,18 +30,16 @@ function constructorFields(abi: ContractABI) {
   if (abiArray) {
     return abiArray.filter(entry => entry.type === FunctionType.Constructor)[0]
   }
-  return []
+  return;
 }
 
 
 interface ContractData {
-  [key: string]: ABIEntry | never[]
+  [key: string]: ContractABI;
 }
 const contracts: ContractData = {
-  "ERC20Token": constructorFields(ERC20Token),
-  "Loan": constructorFields(ERC20Token),
-  "NFT": constructorFields(ERC20Token),
-  "Game": constructorFields(ERC20Token),
+  "ERC20Token": ERC20Token,
+  "ERC721Nft": ERC721Nft,
 }
 
 async function deployContract(body: any) {
@@ -56,7 +54,7 @@ async function deployContract(body: any) {
 
 function ContractForm({ contractName, inputs, setStatus }: ContractFormProps) {
 
-  async function deploy(formData: FormData) {
+  async function deploy(formData: FormData, type: string) {
     const ethereum = window.ethereum
     if (ethereum) {
       try {
@@ -71,16 +69,20 @@ function ContractForm({ contractName, inputs, setStatus }: ContractFormProps) {
 
 
         const { constructorArgs } = formData;
+        console.log(constructorArgs)
 
         const sorted = inputs?.map(({ name }) => constructorArgs?.[name])
+        console.log(sorted)
 
         setStatus((prevState) => ["Validading data...", ...prevState,])
 
         console.log(provider, signer, constructorArgs, sorted)
 
-        if (provider && sorted) {
+        const contractData = contracts[type]
 
-          const factory = new ethers.ContractFactory(ERC20Token.abi, ERC20Token.bytecode, signer);
+        if (provider && sorted && contractData) {
+
+          const factory = new ethers.ContractFactory(contractData.abi, contractData.bytecode, signer);
           setStatus((prevState) => ["Constructing contract", ...prevState,])
           const contract = await factory.deploy(...sorted);
           setStatus((prevState) => ["Deploying...", ...prevState,])
@@ -119,7 +121,7 @@ function ContractForm({ contractName, inputs, setStatus }: ContractFormProps) {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
       if ('constructorArgs' in formData) {
-        await deploy(formData)
+        await deploy(formData, contractName)
       }
     }
 
@@ -197,7 +199,7 @@ export default function DeployContract() {
           <DropDown setState={setState} state={state || ""} />
         </div>
         {
-          state && <ContractForm {...contracts[state]} contractName={state} setStatus={setStatus} />
+          state && <ContractForm {...constructorFields(contracts[state])} contractName={state} setStatus={setStatus} />
         }
       </div>
       <div className={styles.status_box}>
